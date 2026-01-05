@@ -10,6 +10,7 @@ import {
     alpha,
 } from '@mui/material';
 import { CloudUpload as CloudUploadIcon, Description } from '@mui/icons-material';
+import React from 'react';
 
 interface FileUploadSectionProps {
     loading: boolean;
@@ -17,7 +18,10 @@ interface FileUploadSectionProps {
     setEnableMapping: (value: boolean) => void;
     fileName: string;
     error: string;
+    isDragging: boolean;
     handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFileDrop: (file: File) => void;
+    setIsDragging: (value: boolean) => void;
 }
 
 export const FileUploadSection = ({
@@ -26,17 +30,54 @@ export const FileUploadSection = ({
     setEnableMapping,
     fileName,
     error,
+    isDragging,
     handleFileUpload,
+    handleFileDrop,
+    setIsDragging,
 }: FileUploadSectionProps) => {
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!loading) {
+            setIsDragging(true);
+        }
+    };
+
+    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+
+        if (loading) return;
+
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            handleFileDrop(file);
+        }
+    };
+
     return (
         <Paper
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
             sx={{
                 p: 4,
                 mb: 3,
-                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                background: isDragging
+                    ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%)'
+                    : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                 border: '2px dashed',
-                borderColor: loading ? 'primary.main' : 'divider',
+                borderColor: isDragging ? 'primary.main' : loading ? 'primary.main' : 'divider',
                 transition: 'all 0.3s ease-in-out',
+                transform: isDragging ? 'scale(1.01)' : 'scale(1)',
                 '&:hover': {
                     borderColor: 'primary.main',
                     boxShadow: `0 8px 24px ${alpha('#6366f1', 0.15)}`,
@@ -61,10 +102,12 @@ export const FileUploadSection = ({
 
                 <Box sx={{ textAlign: 'center' }}>
                     <Typography variant="h6" fontWeight={600} gutterBottom>
-                        파일을 업로드하세요
+                        {isDragging ? '파일을 여기에 놓으세요' : '파일을 업로드하세요'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Excel 파일(.xlsx, .xls, .csv)을 선택하면 자동으로 JSON으로 변환됩니다
+                        {isDragging
+                            ? 'Excel 파일을 놓으면 자동으로 변환이 시작됩니다'
+                            : 'Excel 파일(.xlsx, .xls, .csv)을 드래그하거나 클릭하여 선택하세요'}
                     </Typography>
                 </Box>
 

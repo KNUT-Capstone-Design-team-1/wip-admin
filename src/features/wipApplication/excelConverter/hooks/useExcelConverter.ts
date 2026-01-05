@@ -8,10 +8,13 @@ interface UseExcelConverterReturn {
     error: string;
     loading: boolean;
     enableMapping: boolean;
+    isDragging: boolean;
     setEnableMapping: (value: boolean) => void;
     handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFileDrop: (file: File) => void;
     handleDownload: () => void;
     handleClear: () => void;
+    setIsDragging: (value: boolean) => void;
 }
 
 export const useExcelConverter = (): UseExcelConverterReturn => {
@@ -20,13 +23,11 @@ export const useExcelConverter = (): UseExcelConverterReturn => {
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [enableMapping, setEnableMapping] = useState<boolean>(true);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const { processFile, terminate } = useExcelWorker();
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
+    const validateAndProcessFile = (file: File) => {
         // 파일 확장자 확인
         const fileExtension = file.name.split('.').pop()?.toLowerCase();
         if (!['xlsx', 'xls', 'csv'].includes(fileExtension || '')) {
@@ -51,6 +52,17 @@ export const useExcelConverter = (): UseExcelConverterReturn => {
                 setLoading(false);
             }
         );
+    };
+
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        validateAndProcessFile(file);
+    };
+
+    const handleFileDrop = (file: File) => {
+        validateAndProcessFile(file);
     };
 
     const handleDownload = () => {
@@ -84,9 +96,12 @@ export const useExcelConverter = (): UseExcelConverterReturn => {
         error,
         loading,
         enableMapping,
+        isDragging,
         setEnableMapping,
         handleFileUpload,
+        handleFileDrop,
         handleDownload,
         handleClear,
+        setIsDragging,
     };
 };

@@ -14,10 +14,13 @@ export default function ExcelConverterPage() {
         error,
         loading,
         enableMapping,
+        isDragging,
         setEnableMapping,
         handleFileUpload,
+        handleFileDrop,
         handleDownload,
         handleClear,
+        setIsDragging,
     } = useExcelConverter();
 
     return (
@@ -53,7 +56,10 @@ export default function ExcelConverterPage() {
                 setEnableMapping={setEnableMapping}
                 fileName={fileName}
                 error={error}
+                isDragging={isDragging}
                 handleFileUpload={handleFileUpload}
+                handleFileDrop={handleFileDrop}
+                setIsDragging={setIsDragging}
             />
 
             {jsonData.length > 0 && !loading && (
