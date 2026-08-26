@@ -34,7 +34,10 @@ yarn-error.log*
 .env.local
 
 # gcp 관련 json 파일
-what-is-pill-2435ec243d4b
+what-is-pill-2435ec243d4b.json
+
+# JetBrains IDE
+.idea/
 
 # vercel
 .vercel
