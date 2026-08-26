@@ -16,8 +16,16 @@ import {
   ListItemText,
   Avatar,
   Stack,
+  Button,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import { Menu as MenuIcon, Person as PersonIcon } from '@mui/icons-material';
+import {
+  Menu as MenuIcon,
+  Person as PersonIcon,
+  Logout as LogoutIcon,
+  MoreVert as MoreVertIcon,
+} from '@mui/icons-material';
 import { useRouter, usePathname } from 'next/navigation';
 import { MENU_ITEMS } from '@/shared/constants/navigation';
 import { DRAWER_WIDTH, APP_TITLE, SIDEBAR_TITLE } from '@/shared/constants/layout';
@@ -28,11 +36,36 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
   const pathname = usePathname();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      // 로그아웃 API 호출
+      await fetch('/api/auth/logout', { method: 'POST' });
+
+      // 로그인 페이지로 이동
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('❌ 로그아웃 실패:', error);
+      // 에러가 발생해도 로그인 페이지로 이동 (쿠키 만료로 자연스럽게 로그아웃됨)
+      router.push('/login');
+    }
+    handleMenuClose();
   };
 
   const drawer = (
@@ -132,7 +165,39 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               admin@example.com
             </Typography>
           </Box>
+          <IconButton
+            size="small"
+            onClick={handleMenuOpen}
+            sx={{
+              '&:hover': {
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+              },
+            }}
+          >
+            <MoreVertIcon />
+          </IconButton>
         </Stack>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem onClick={handleLogout}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>로그아웃</ListItemText>
+          </MenuItem>
+        </Menu>
       </Box>
     </Box>
   );
