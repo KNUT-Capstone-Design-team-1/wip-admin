@@ -29,14 +29,16 @@ export const useNoticeStore = create<ContentState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await fetch('/api/notices');
-      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error('Failed to fetch notices');
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to fetch notices');
       }
 
+      const notices = await response.json();
+
       // API 데이터를 Content 형식에 맞게 변환
-      const formattedContents: Content[] = data.notices.map((item: any) => ({
+      const formattedContents: Content[] = notices.map((item: any) => ({
         id: item.idx,                     // idx → id
         title: item.title,
         description: item.contents,       // contents → description

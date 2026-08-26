@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
+import { generateCloudflareAuthToken } from '@/lib/cloudflareToken';
 
 export async function GET() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices`
+      `${process.env.NEXT_PUBLIC_CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices`,
+      {
+        headers: {
+          'x-auth-token': generateCloudflareAuthToken(),
+        },
+      }
     );
 
     if (!response.ok) {
@@ -14,7 +20,7 @@ export async function GET() {
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    return NextResponse.json(data.notices);
   } catch (error) {
     console.error('Error fetching notices:', error);
     return NextResponse.json(
@@ -36,6 +42,7 @@ export async function POST(request: Request) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-auth-token': generateCloudflareAuthToken(),
         },
         body: JSON.stringify(body),
       }

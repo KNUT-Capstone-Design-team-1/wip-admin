@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { generateCloudflareAuthToken } from '@/lib/cloudflareToken';
 
 export async function PUT(
   request: Request,
@@ -16,6 +17,7 @@ export async function PUT(
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'x-auth-token': generateCloudflareAuthToken(),
         },
         body: JSON.stringify(body),
       }
@@ -66,6 +68,9 @@ export async function DELETE(
       `${process.env.NEXT_PUBLIC_CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices/${id}`,
       {
         method: 'DELETE',
+        headers: {
+          'x-auth-token': generateCloudflareAuthToken(),
+        },
       }
     );
 
