@@ -39,26 +39,48 @@ export const INCLUDED_KEYS: string[] | null = null;
 // export const INCLUDED_KEYS: string[] = ['itemName', 'quantity', 'price'];
 
 /**
+ * 헤더 정규화: 앞뒤 공백/개행 제거 + 연속 공백을 단일 공백으로 축소 + NBSP 처리
+ */
+function normalizeHeader(key: string): string {
+    return key.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+const NORMALIZED_MAPPING: Record<string, string> = Object.fromEntries(
+    Object.entries(COLUMN_MAPPING).map(([k, v]) => [normalizeHeader(k), v])
+);
+
+/**
  * 매핑 적용 함수
  * COLUMN_MAPPING에 정의된 키만 변환하고, 나머지는 제외
  */
 export function applyMapping(data: any[]): any[] {
-    return data.map(row => {
+    const unmatchedKeys = new Set<string>();
+
+    const result = data.map(row => {
         const mappedRow: Record<string, any> = {};
 
         for (const [originalKey, value] of Object.entries(row)) {
-            // COLUMN_MAPPING에 정의된 키인지 확인
-            if (COLUMN_MAPPING[originalKey]) {
-                const mappedKey = COLUMN_MAPPING[originalKey];
+            const normalized = normalizeHeader(originalKey);
+            const mappedKey = NORMALIZED_MAPPING[normalized];
 
-                // 포함할 키 필터링
+            if (mappedKey) {
                 if (INCLUDED_KEYS === null || INCLUDED_KEYS.includes(mappedKey)) {
                     mappedRow[mappedKey] = value;
                 }
+            } else {
+                unmatchedKeys.add(originalKey);
             }
-            // COLUMN_MAPPING에 없는 키는 제외됨
         }
 
         return mappedRow;
     });
+
+    if (unmatchedKeys.size > 0) {
+        console.warn(
+            '[excelMapping] COLUMN_MAPPING 에 없는 헤더 (제외됨):',
+            Array.from(unmatchedKeys)
+        );
+    }
+
+    return result;
 }
