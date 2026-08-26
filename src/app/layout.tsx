@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ThemeRegistry from "@/shared/components/ThemeRegistry";
+import QueryProvider from "@/shared/components/QueryProvider";
 
 export const metadata: Metadata = {
   title: "WIP 관리자 페이지",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <QueryProvider>
+          <ThemeRegistry>{children}</ThemeRegistry>
+        </QueryProvider>
       </body>
     </html>
   );
