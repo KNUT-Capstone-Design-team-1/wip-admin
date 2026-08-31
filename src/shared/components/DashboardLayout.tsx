@@ -8,7 +8,6 @@ import {
   Toolbar,
   List,
   Typography,
-  Divider,
   IconButton,
   ListItem,
   ListItemButton,
@@ -16,7 +15,6 @@ import {
   ListItemText,
   Avatar,
   Stack,
-  Button,
   Menu,
   MenuItem,
 } from '@mui/material';

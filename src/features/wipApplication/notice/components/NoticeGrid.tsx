@@ -4,9 +4,14 @@ import React from 'react';
 import {DataGrid} from "@mui/x-data-grid";
 import {Box} from "@mui/material";
 import {createNoticeColumns} from "@/features/wipApplication/notice/components/NoticeColumns";
-import {useNoticeStore} from "@/features/wipApplication/notice/store/useNoticeStore";
+import {useNoticeStore, Content} from "@/features/wipApplication/notice/store/useNoticeStore";
 
-const NoticeGrid = ({ handleOpen, handleDelete }) => {
+interface NoticeGridProps {
+    handleOpen: (content?: Content) => void;
+    handleDelete: (id: number) => void;
+}
+
+const NoticeGrid = ({ handleOpen, handleDelete }: NoticeGridProps) => {
     const { contents, isLoading: storeLoading } = useNoticeStore();
     const columns = createNoticeColumns({ handleOpen, handleDelete });
 

@@ -8,7 +8,7 @@
  * 4. 현재 세션 조회
  */
 
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 
@@ -60,7 +60,7 @@ interface SessionPayload {
  * 4. 암호화된 토큰 반환
  */
 export async function encrypt(payload: SessionPayload): Promise<string> {
-  return await new SignJWT(payload as any)
+  return await new SignJWT(payload as unknown as JWTPayload)
     .setProtectedHeader({ alg: 'HS256' })  // HMAC SHA-256 알고리즘
     .setIssuedAt()                          // 발급 시간 설정
     .setExpirationTime('24h')               // 24시간 후 만료
@@ -84,8 +84,8 @@ export async function decrypt(token: string): Promise<SessionPayload | null> {
     const { payload } = await jwtVerify(token, secretKey, {
       algorithms: ['HS256'],  // 허용할 알고리즘 명시 (보안)
     });
-    return payload as SessionPayload;
-  } catch (error) {
+    return payload as unknown as SessionPayload;
+  } catch {
     // 토큰 검증 실패 (만료, 변조, 형식 오류 등)
     // 보안상 구체적인 에러를 노출하지 않음
     return null;

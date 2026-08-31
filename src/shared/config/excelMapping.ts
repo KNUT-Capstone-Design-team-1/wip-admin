@@ -53,11 +53,11 @@ const NORMALIZED_MAPPING: Record<string, string> = Object.fromEntries(
  * 매핑 적용 함수
  * COLUMN_MAPPING에 정의된 키만 변환하고, 나머지는 제외
  */
-export function applyMapping(data: any[]): any[] {
+export function applyMapping(data: Record<string, unknown>[]): Record<string, unknown>[] {
     const unmatchedKeys = new Set<string>();
 
     const result = data.map(row => {
-        const mappedRow: Record<string, any> = {};
+        const mappedRow: Record<string, unknown> = {};
 
         for (const [originalKey, value] of Object.entries(row)) {
             const normalized = normalizeHeader(originalKey);

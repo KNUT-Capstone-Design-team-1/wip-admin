@@ -15,7 +15,7 @@ import CreateNewContent from "@/features/wipApplication/notice/components/Create
 import NoticeCreateEditBox from "@/features/wipApplication/notice/components/NoticeCreateEditBox";
 
 export default function NoticePage() {
-    const { fetchContents, isLoading } = useNoticeStore();
+    const { fetchContents } = useNoticeStore();
 
     const {
         open,
@@ -68,6 +68,7 @@ export default function NoticePage() {
                 open={open}
                 editingContent={editingContent}
                 formData={formData}
+                setFormData={setFormData}
                 loading={loading}
                 handleClose={handleClose}
                 handleSave={handleSave}

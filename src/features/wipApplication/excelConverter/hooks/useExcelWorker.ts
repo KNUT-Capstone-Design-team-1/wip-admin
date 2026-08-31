@@ -1,13 +1,15 @@
 import { useRef, useCallback } from 'react';
 
+type ExcelRow = Record<string, unknown>;
+
 interface WorkerMessage {
     success: boolean;
-    data?: any[];
+    data?: ExcelRow[];
     error?: string;
 }
 
 interface UseExcelWorkerReturn {
-    processFile: (file: File, onSuccess: (data: any[]) => void, onError: (error: string) => void) => void;
+    processFile: (file: File, onSuccess: (data: ExcelRow[]) => void, onError: (error: string) => void) => void;
     terminate: () => void;
 }
 
@@ -16,7 +18,7 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
 
     const processFile = useCallback((
         file: File,
-        onSuccess: (data: any[]) => void,
+        onSuccess: (data: ExcelRow[]) => void,
         onError: (error: string) => void
     ) => {
         // 기존 Worker 종료

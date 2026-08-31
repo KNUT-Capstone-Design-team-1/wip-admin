@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { applyMapping } from '@/shared/config/excelMapping';
 import { useExcelWorker } from './useExcelWorker';
 
+type ExcelRow = Record<string, unknown>;
+
 interface UseExcelConverterReturn {
-    jsonData: any[];
+    jsonData: ExcelRow[];
     fileName: string;
     error: string;
     loading: boolean;
@@ -18,7 +20,7 @@ interface UseExcelConverterReturn {
 }
 
 export const useExcelConverter = (): UseExcelConverterReturn => {
-    const [jsonData, setJsonData] = useState<any[]>([]);
+    const [jsonData, setJsonData] = useState<ExcelRow[]>([]);
     const [fileName, setFileName] = useState<string>('');
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

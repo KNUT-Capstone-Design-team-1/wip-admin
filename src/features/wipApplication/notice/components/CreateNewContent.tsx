@@ -2,7 +2,11 @@ import React from 'react';
 import {Button} from "@mui/material";
 import {Add as AddIcon} from "@mui/icons-material";
 
-const CreateNewContent = ({ handleOpen }: any) => {
+interface CreateNewContentProps {
+    handleOpen: () => void;
+}
+
+const CreateNewContent = ({ handleOpen }: CreateNewContentProps) => {
     return (
         <Button
             variant="contained"

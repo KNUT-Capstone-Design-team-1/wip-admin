@@ -1,7 +1,14 @@
 import React from 'react';
 import {Checkbox, DialogContent, FormControlLabel, TextField} from "@mui/material";
+import type { NoticeFormData } from "@/features/wipApplication/notice/components/NoticeCreateEditBox";
 
-const NoticeEditModal = ({ formData, loading }: any) => {
+interface NoticeEditModalProps {
+    formData: NoticeFormData;
+    setFormData: React.Dispatch<React.SetStateAction<NoticeFormData>>;
+    loading: boolean;
+}
+
+const NoticeEditModal = ({ formData, setFormData, loading }: NoticeEditModalProps) => {
     return (
         <DialogContent>
             <TextField

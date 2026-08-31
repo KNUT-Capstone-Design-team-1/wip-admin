@@ -4,7 +4,7 @@ import { Code, Visibility } from '@mui/icons-material';
 const PREVIEW_LIMIT = 10;
 
 interface JsonPreviewCardProps {
-    jsonData: any[];
+    jsonData: Record<string, unknown>[];
 }
 
 export const JsonPreviewCard = ({ jsonData }: JsonPreviewCardProps) => {
@@ -123,7 +123,7 @@ export const JsonPreviewCard = ({ jsonData }: JsonPreviewCardProps) => {
                             border: `1px solid ${alpha('#3b82f6', 0.2)}`,
                         }}
                     >
-                        전체 데이터를 보려면 'JSON 다운로드' 버튼을 클릭하세요.
+                        전체 데이터를 보려면 &lsquo;JSON 다운로드&rsquo; 버튼을 클릭하세요.
                     </Alert>
                 )}
             </CardContent>

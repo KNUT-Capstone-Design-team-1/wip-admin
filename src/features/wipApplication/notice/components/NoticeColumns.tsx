@@ -2,7 +2,6 @@ import { GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { Chip } from '@mui/material';
 import { Content } from '@/features/wipApplication/notice/store/useNoticeStore';
-import { getStatusColor, getStatusLabel } from "@/features/wipApplication/statistics";
 
 interface NoticeColumnsParams {
     handleOpen: (content?: Content) => void;

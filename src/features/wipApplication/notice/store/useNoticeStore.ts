@@ -37,8 +37,16 @@ export const useNoticeStore = create<ContentState>((set, get) => ({
 
       const notices = await response.json();
 
+      interface NoticeApiItem {
+        idx: number;
+        title: string;
+        contents: string;
+        createDate: string;
+        mustRead?: number;
+      }
+
       // API 데이터를 Content 형식에 맞게 변환
-      const formattedContents: Content[] = notices.map((item: any) => ({
+      const formattedContents: Content[] = notices.map((item: NoticeApiItem) => ({
         id: item.idx,                     // idx → id
         title: item.title,
         description: item.contents,       // contents → description

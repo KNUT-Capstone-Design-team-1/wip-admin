@@ -1,4 +1,7 @@
-import { MetricServiceClient } from "@google-cloud/monitoring";
+import { MetricServiceClient, protos } from "@google-cloud/monitoring";
+
+type ITimeSeries = protos.google.monitoring.v3.ITimeSeries;
+type IPoint = protos.google.monitoring.v3.IPoint;
 
 const client = new MetricServiceClient();
 const PROJECT_ID = "what-is-pill";
@@ -63,7 +66,7 @@ export async function getRequestCount() {
 export async function getMetricsForPeriod(
     metricType: string,
     daysAgo: number = 30
-): Promise<any[]> {
+): Promise<ITimeSeries[]> {
     try {
         const endTime = Math.floor(Date.now() / 1000);
         const startTime = endTime - (daysAgo * 24 * 60 * 60);
@@ -125,10 +128,11 @@ export async function getDailyMetrics(days: number = 30): Promise<DailyMetrics[]
 
             // 첫 번째 데이터 포인트 샘플 출력
             const sample = requestCountData[0];
-            if (sample?.points?.[0]) {
+            const samplePoint = sample?.points?.[0];
+            if (samplePoint) {
                 console.log('샘플 데이터:', {
-                    날짜: new Date(sample.points[0].interval.endTime.seconds * 1000).toISOString().split('T')[0],
-                    요청수: sample.points[0].value.int64Value,
+                    날짜: new Date(Number(samplePoint.interval?.endTime?.seconds ?? 0) * 1000).toISOString().split('T')[0],
+                    요청수: samplePoint.value?.int64Value,
                     메트릭타입: sample.metric?.type,
                 });
             }
@@ -138,9 +142,9 @@ export async function getDailyMetrics(days: number = 30): Promise<DailyMetrics[]
         const metricsMap = new Map<string, DailyMetrics>();
 
         // Cloud Run API 요청 수 처리
-        requestCountData.forEach((series: any) => {
-            series.points?.forEach((point: any) => {
-                const date = new Date(point.interval.endTime.seconds * 1000)
+        requestCountData.forEach((series: ITimeSeries) => {
+            series.points?.forEach((point: IPoint) => {
+                const date = new Date(Number(point.interval?.endTime?.seconds ?? 0) * 1000)
                     .toISOString()
                     .split('T')[0];
 
@@ -157,20 +161,20 @@ export async function getDailyMetrics(days: number = 30): Promise<DailyMetrics[]
 
                 const metric = metricsMap.get(date)!;
                 // Cloud Run request_count = 백엔드 API 호출 수
-                metric.apiCalls += point.value.int64Value || 0;
+                metric.apiCalls += Number(point.value?.int64Value ?? 0);
             });
         });
 
         // 응답 시간 처리
-        responseTimeData.forEach((series: any) => {
-            series.points?.forEach((point: any) => {
-                const date = new Date(point.interval.endTime.seconds * 1000)
+        responseTimeData.forEach((series: ITimeSeries) => {
+            series.points?.forEach((point: IPoint) => {
+                const date = new Date(Number(point.interval?.endTime?.seconds ?? 0) * 1000)
                     .toISOString()
                     .split('T')[0];
 
                 const metric = metricsMap.get(date);
                 if (metric) {
-                    metric.avgResponseTime = point.value.doubleValue || 0;
+                    metric.avgResponseTime = Number(point.value?.doubleValue ?? 0);
                 }
             });
         });

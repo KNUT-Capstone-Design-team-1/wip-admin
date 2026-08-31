@@ -113,7 +113,7 @@ export default function LoginPage() {
    */
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !loading) {
-      handleSubmit(e as any);
+      handleSubmit(e as unknown as FormEvent);
     }
   };
 

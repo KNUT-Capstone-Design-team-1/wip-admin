@@ -1,4 +1,4 @@
-import { getAppMetrics, getDailyMetrics } from "@/lib/metrics";
+import { getAppMetrics } from "@/lib/metrics";
 import { NextRequest } from "next/server";
 
 /**
