@@ -8,7 +8,7 @@ const ContentDistribution = () => {
     const { statistics } = useStatisticsStore();
 
     return (
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
             <Paper
                 sx={{
                     p: 3,
@@ -50,16 +50,15 @@ const ContentDistribution = () => {
                                 value: item.count,
                                 label: item.status,
                             })),
-                            highlightScope: { faded: 'global', highlighted: 'item' },
+                            highlightScope: { fade: 'global', highlight: 'item' },
                             faded: { innerRadius: 30, additionalRadius: -10, color: 'gray' },
                         },
                     ]}
                     height={300}
                     slotProps={{
                         legend: {
-                            direction: 'column',
-                            position: { vertical: 'middle', horizontal: 'right' },
-                            padding: 0,
+                            direction: 'vertical',
+                            position: { vertical: 'middle', horizontal: 'end' },
                         },
                     }}
                 />

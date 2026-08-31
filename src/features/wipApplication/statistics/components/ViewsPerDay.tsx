@@ -8,7 +8,7 @@ const ViewsPerDay = () => {
     const { statistics } = useStatisticsStore();
 
     return (
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
             <Paper
                 sx={{
                     p: 3,

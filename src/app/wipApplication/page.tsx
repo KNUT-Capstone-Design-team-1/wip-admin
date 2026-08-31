@@ -10,9 +10,10 @@ import DashboardContent from "@/features/wipApplication/components/DashboardCont
 import RecentActivity from "@/features/wipApplication/components/RecentActivity";
 import { Dashboard as DashboardIcon } from '@mui/icons-material';
 import {useEffect, useState} from "react";
+import type { DailyMetrics } from "@/lib/metrics";
 
 interface AppMetrics {
-  dailyMetrics: any[];
+  dailyMetrics: DailyMetrics[];
   totalUsers: number;             // 전체 누적 사용자 수
   totalApiCalls: number;          // 전체 API 호출 수
   totalDownloads: number;         // 전체 다운로드 수

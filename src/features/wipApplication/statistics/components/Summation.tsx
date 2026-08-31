@@ -7,7 +7,7 @@ const Summation = () => {
 
     return (
         <>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <Paper sx={{ p: 3 }}>
                     <Typography variant="h6" gutterBottom>
                         주요 지표
@@ -29,7 +29,7 @@ const Summation = () => {
                 </Paper>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <Paper sx={{ p: 3 }}>
                     <Typography variant="h6" gutterBottom>
                         통계 요약

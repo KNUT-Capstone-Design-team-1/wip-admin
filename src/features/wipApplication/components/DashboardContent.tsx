@@ -2,10 +2,11 @@ import React from 'react';
 import {WIP_ITEM} from "@/features/wipApplication/constants";
 import {Box, Card, CardContent, Grid, Typography, alpha} from "@mui/material";
 import { TrendingUp, TrendingDown } from '@mui/icons-material';
+import type { DailyMetrics } from '@/lib/metrics';
 
 interface DashboardContentProps {
     metrics?: {
-        dailyMetrics: any[];
+        dailyMetrics: DailyMetrics[];
         totalUsers: number;             // 전체 누적 사용자 수
         totalApiCalls: number;          // 전체 API 호출 수
         totalDownloads: number;         // 전체 다운로드 수
@@ -53,7 +54,7 @@ const DashboardContent = ({ metrics }: DashboardContentProps) => {
                 const isResponseTime = index === 3; // 응답시간은 감소가 좋음
 
                 return (
-                <Grid item xs={12} sm={6} md={3} key={index}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                     <Card
                         sx={{
                             position: 'relative',
