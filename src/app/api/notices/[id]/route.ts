@@ -3,10 +3,10 @@ import { generateCloudflareAuthToken } from '@/lib/cloudflareToken';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
     const body = await request.json();
 
     console.log(`[PUT /api/notices/${id}] Request body:`, body);
@@ -57,10 +57,10 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
 
     console.log(`[DELETE /api/notices/${id}]`);
 

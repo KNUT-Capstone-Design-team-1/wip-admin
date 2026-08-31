@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     // ==================================================
 
     // 클라이언트 IP 주소 추출
-    const ip = request.ip ?? request.headers.get('x-forwarded-for') ?? 'unknown';
+    const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown';
 
     const rateLimitResult = await checkRateLimit(`login:${ip}`);
 
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     let body;
     try {
       body = await request.json();
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: '잘못된 요청 형식입니다.' },
         { status: 400 }
