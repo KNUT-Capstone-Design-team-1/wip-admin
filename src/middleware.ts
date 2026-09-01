@@ -104,7 +104,7 @@ export async function middleware(request: NextRequest) {
     // 인증되지 않은 사용자가 보호된 경로 접근 시도
     console.warn('[MIDDLEWARE] Unauthorized access attempt:', {
       pathname,
-      ip: request.ip ?? request.headers.get('x-forwarded-for') ?? 'unknown',
+      ip: request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown',
       timestamp: new Date().toISOString(),
     });
 
