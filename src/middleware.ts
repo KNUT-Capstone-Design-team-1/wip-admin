@@ -38,12 +38,11 @@ const publicPaths = ['/login', '/api/auth/login'];
  * 보호된 경로 (로그인 필요)
  *
  * 인증된 사용자만 접근할 수 있는 경로
- * - /wipApplication: 관리자 대시보드
- * - /api/gcp: GCP 관련 API
- * - /api/track: 트래킹 API
+ * - /wipApplication: 관리자 페이지 (공지사항, Excel 변환)
+ * - /api/notices: 공지사항 API
  * - /api/auth/logout: 로그아웃 API
  */
-const protectedPaths = ['/wipApplication', '/api/gcp', '/api/track', '/api/auth/logout'];
+const protectedPaths = ['/wipApplication', '/api/notices', '/api/auth/logout'];
 
 // ==================================================
 // Middleware 함수
@@ -116,10 +115,10 @@ export async function middleware(request: NextRequest) {
   // 5. 루트 경로 처리
   // ==================================================
 
-  if (pathname === '/') {
-    // 로그인한 사용자: 메인 페이지로 리다이렉트
+  if (pathname === '/' || pathname === '/wipApplication') {
+    // 로그인한 사용자: 공지사항 페이지로 리다이렉트
     if (session) {
-      return NextResponse.redirect(new URL('/wipApplication', request.url));
+      return NextResponse.redirect(new URL('/wipApplication/notice', request.url));
     }
     // 로그인하지 않은 사용자: 로그인 페이지로 리다이렉트
     else {
@@ -133,8 +132,8 @@ export async function middleware(request: NextRequest) {
 
   if (pathname === '/login' && session) {
     // 이미 로그인한 사용자가 로그인 페이지 접근 시
-    // 메인 페이지로 리다이렉트
-    return NextResponse.redirect(new URL('/wipApplication', request.url));
+    // 공지사항 페이지로 리다이렉트
+    return NextResponse.redirect(new URL('/wipApplication/notice', request.url));
   }
 
   // ==================================================

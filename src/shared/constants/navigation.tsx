@@ -1,7 +1,5 @@
 import {
-  Dashboard as DashboardIcon,
   Article as ArticleIcon,
-  BarChart as BarChartIcon,
   UploadFile as UploadFileIcon,
 } from '@mui/icons-material';
 import {JSX} from "react";
@@ -13,16 +11,6 @@ export interface MenuItem {
 }
 
 export const MENU_ITEMS: MenuItem[] = [
-  {
-    text: '대시보드(임시)',
-    icon: <DashboardIcon />,
-    path: '/wipApplication',
-  },
-  {
-    text: '통계(임시)',
-    icon: <BarChartIcon />,
-    path: '/wipApplication/statistics',
-  },
   {
     text: '공지사항 관리',
     icon: <ArticleIcon />,
