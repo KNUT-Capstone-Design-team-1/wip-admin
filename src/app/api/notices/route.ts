@@ -4,7 +4,7 @@ import { generateCloudflareAuthToken } from '@/lib/cloudflareToken';
 export async function GET() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices`,
+      `${process.env.CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices`,
       {
         headers: {
           'x-auth-token': generateCloudflareAuthToken(),
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     console.log('[POST /api/notices] Request body:', body);
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices`,
+      `${process.env.CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices`,
       {
         method: 'POST',
         headers: {

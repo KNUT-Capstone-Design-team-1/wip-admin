@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    const gcpUrl = process.env.NEXT_PUBLIC_GOOGLE_CLOUD_INIT_INFO_URL;
+    const gcpUrl = process.env.GOOGLE_CLOUD_INIT_INFO_URL;
 
     console.log('[API Route] GCP URL:', gcpUrl);
 
     if (!gcpUrl) {
-        const errorMsg = 'GCP URL이 설정되지 않았습니다. .env.local 파일에 NEXT_PUBLIC_GOOGLE_CLOUD_INIT_INFO_URL을 추가하세요.';
+        const errorMsg = 'GCP URL이 설정되지 않았습니다. .env.local 파일에 GOOGLE_CLOUD_INIT_INFO_URL을 추가하세요.';
         console.error('[API Route]', errorMsg);
         return NextResponse.json(
             { error: errorMsg },

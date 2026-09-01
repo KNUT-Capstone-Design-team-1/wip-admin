@@ -12,7 +12,7 @@ export async function PUT(
     console.log(`[PUT /api/notices/${id}] Request body:`, body);
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices/${id}`,
+      `${process.env.CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices/${id}`,
       {
         method: 'PUT',
         headers: {
@@ -65,7 +65,7 @@ export async function DELETE(
     console.log(`[DELETE /api/notices/${id}]`);
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices/${id}`,
+      `${process.env.CLOUD_FLARE_WORKERS_NOTICES_API_URL}/notices/${id}`,
       {
         method: 'DELETE',
         headers: {
