@@ -24,6 +24,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyCredentials, createSession } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { decryptLoginPayload } from '@/lib/loginCrypto.server';
 
 /**
  * 로그인 API 핸들러
@@ -78,20 +79,46 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { username, password } = body;
+    // 암호화된 payload 만 허용
+    // 클라이언트가 NEXT_PUBLIC_LOGIN_PUBLIC_KEY 로 RSA-OAEP 암호화한 base64 문자열
+    const encryptedPayload = body?.payload;
+    if (typeof encryptedPayload !== 'string' || encryptedPayload.length === 0) {
+      return NextResponse.json(
+        { error: '잘못된 요청 형식입니다.' },
+        { status: 400 }
+      );
+    }
+
+    // 지나치게 큰 페이로드 차단 (2048bit RSA-OAEP ciphertext ≈ 344자 base64)
+    if (encryptedPayload.length > 2048) {
+      return NextResponse.json(
+        { error: '잘못된 요청 형식입니다.' },
+        { status: 400 }
+      );
+    }
+
+    const decrypted = decryptLoginPayload(encryptedPayload);
+
+    if (!decrypted.ok || !decrypted.payload) {
+      // expired 는 재시도 유도, 그 외에는 일반 400
+      if (decrypted.error === 'expired') {
+        return NextResponse.json(
+          { error: '요청이 만료되었습니다. 다시 시도해주세요.' },
+          { status: 400 }
+        );
+      }
+      return NextResponse.json(
+        { error: '잘못된 요청 형식입니다.' },
+        { status: 400 }
+      );
+    }
+
+    const { username, password } = decrypted.payload;
 
     // 필수 필드 체크
     if (!username || !password) {
       return NextResponse.json(
         { error: '아이디와 비밀번호를 입력해주세요.' },
-        { status: 400 }
-      );
-    }
-
-    // 타입 체크
-    if (typeof username !== 'string' || typeof password !== 'string') {
-      return NextResponse.json(
-        { error: '아이디와 비밀번호는 문자열이어야 합니다.' },
         { status: 400 }
       );
     }

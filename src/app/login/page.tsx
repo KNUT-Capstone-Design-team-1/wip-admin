@@ -14,6 +14,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { encryptLoginPayload } from '@/lib/loginCrypto.client';
 import {
   Box,
   Card,
@@ -66,13 +67,17 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      // 페이로드를 공개키(RSA-OAEP)로 암호화 + timestamp 포함
+      // → 네트워크/프록시 로그에 평문 노출 방지 + replay attack 차단
+      const payload = await encryptLoginPayload({ username, password });
+
       // 로그인 API 호출
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ payload }),
       });
 
       const data = await response.json();
